@@ -34,14 +34,16 @@ int main(int argc, char** argv)
 	VideoCapture cap;
 	// open the default camera, use something different from 0 otherwise;
 	// Check VideoCapture documentation.
-	if (!cap.open(0))
+	if (!cap.open(2))
 		return 0;
 	for (;;)
 	{
 		Mat frame;
 		cap >> frame;
-		if (frame.empty()) break; // end of video stream
+		if (frame.empty())  break; // end of video stream
 		imshow("this is you, smile! :)", frame);
+		//printf("saving image");
+		imwrite("image.jpg", frame);
 		if (waitKey(10) == 27) break; // stop capturing by pressing ESC 
 	}
 	// the camera will be closed automatically upon exit
