@@ -7,6 +7,7 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
+#include "opencv2/opencv.hpp"
 
 using namespace cv;
 
@@ -27,44 +28,24 @@ void Dilation(int, void*);
 /**
 * @function main
 */
-int main(int, char** argv)
+using namespace cv;
+int main(int argc, char** argv)
 {
-	/// Load an image
-	src = imread(argv[1], IMREAD_COLOR);
-
-	if (src.empty())
+	VideoCapture cap;
+	// open the default camera, use something different from 0 otherwise;
+	// Check VideoCapture documentation.
+	if (!cap.open(0))
+		return 0;
+	for (;;)
 	{
-		return -1;
+		Mat frame;
+		cap >> frame;
+		if (frame.empty()) break; // end of video stream
+		imshow("this is you, smile! :)", frame);
+		if (waitKey(10) == 27) break; // stop capturing by pressing ESC 
 	}
-
-	/// Create windows
-	namedWindow("Erosion Demo", WINDOW_AUTOSIZE);
-	namedWindow("Dilation Demo", WINDOW_AUTOSIZE);
-	moveWindow("Dilation Demo", src.cols, 0);
-
-	/// Create Erosion Trackbar
-	createTrackbar("Element:\n 0: Rect \n 1: Cross \n 2: Ellipse", "Erosion Demo",
-		&erosion_elem, max_elem,
-		Erosion);
-
-	createTrackbar("Kernel size:\n 2n +1", "Erosion Demo",
-		&erosion_size, max_kernel_size,
-		Erosion);
-
-	/// Create Dilation Trackbar
-	createTrackbar("Element:\n 0: Rect \n 1: Cross \n 2: Ellipse", "Dilation Demo",
-		&dilation_elem, max_elem,
-		Dilation);
-
-	createTrackbar("Kernel size:\n 2n +1", "Dilation Demo",
-		&dilation_size, max_kernel_size,
-		Dilation);
-
-	/// Default start
-	Erosion(0, 0);
-	Dilation(0, 0);
-
-	waitKey(0);
+	// the camera will be closed automatically upon exit
+	// cap.close();
 	return 0;
 }
 
