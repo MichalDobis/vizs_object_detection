@@ -29,6 +29,13 @@ void Dilation(int, void*);
 * @function main
 */
 using namespace cv;
+
+bool save_img(Mat frame) {
+	std::string img_name = "img_";
+	static int counter = 0;
+
+	return imwrite("demo/" + img_name + std::to_string(counter++) + ".jpg", frame);
+}
 int main(int argc, char** argv)
 {
 	VideoCapture cap;
@@ -36,6 +43,7 @@ int main(int argc, char** argv)
 	// Check VideoCapture documentation.
 	if (!cap.open(2))
 		return 0;
+
 	for (;;)
 	{
 		Mat frame;
@@ -43,7 +51,8 @@ int main(int argc, char** argv)
 		if (frame.empty())  break; // end of video stream
 		imshow("this is you, smile! :)", frame);
 		//printf("saving image");
-		imwrite("image.jpg", frame);
+
+		save_img(frame);
 		if (waitKey(10) == 27) break; // stop capturing by pressing ESC 
 	}
 	// the camera will be closed automatically upon exit
