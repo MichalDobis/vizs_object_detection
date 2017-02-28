@@ -1,5 +1,4 @@
 ﻿  Source.cpp
-c:\users\michal\documents\visual studio 2015\projects\vizs_object_detection\vizs_object_detection\source.cpp(102): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  c:\users\michal\documents\visual studio 2015\projects\vizs_object_detection\vizs_object_detection\source.cpp(102): note: consider using '%zd' in the format string
+c:\users\michal\documents\visual studio 2015\projects\vizs_object_detection\vizs_object_detection\source.cpp(182): warning C4018: '<': signed/unsigned mismatch
   vizs_object_detection.vcxproj -> C:\Users\Michal\Documents\Visual Studio 2015\Projects\vizs_object_detection\x64\Debug\vizs_object_detection.exe
   vizs_object_detection.vcxproj -> C:\Users\Michal\Documents\Visual Studio 2015\Projects\vizs_object_detection\x64\Debug\vizs_object_detection.pdb (Full PDB)
