@@ -1,4 +1,4 @@
 ﻿  Source.cpp
-c:\users\michal\documents\visual studio 2015\projects\vizs_object_detection\vizs_object_detection\source.cpp(182): warning C4018: '<': signed/unsigned mismatch
-  vizs_object_detection.vcxproj -> C:\Users\Michal\Documents\Visual Studio 2015\Projects\vizs_object_detection\x64\Debug\vizs_object_detection.exe
-  vizs_object_detection.vcxproj -> C:\Users\Michal\Documents\Visual Studio 2015\Projects\vizs_object_detection\x64\Debug\vizs_object_detection.pdb (Full PDB)
+c:\users\michal\documents\visual studio 2015\projects\vizs_object_detection\vizs_object_detection\source.cpp(111): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  vizs_object_detection.vcxproj -> C:\Users\Michal\documents\visual studio 2015\Projects\vizs_object_detection\x64\Debug\vizs_object_detection.exe
+  vizs_object_detection.vcxproj -> C:\Users\Michal\documents\visual studio 2015\Projects\vizs_object_detection\x64\Debug\vizs_object_detection.pdb (Full PDB)
