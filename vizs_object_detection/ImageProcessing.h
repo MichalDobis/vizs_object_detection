@@ -159,6 +159,8 @@ public:
 			Canny(grayImage, edgeDetectionImage, 100, 100);
 			threshold(grayImage, OTSUImage, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
 
+			
+
 			//imshow("VIDEO PLAY", image);		//show normal image
 			//imshow("VIDEO PLAY with blur img", smoothImage);	//show smooth image
 			//imshow("Edge decetion with CANNY", edgeDetectionImage);	//show edge detection

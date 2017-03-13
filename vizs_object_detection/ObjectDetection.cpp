@@ -10,7 +10,13 @@ ObjectDetection::ObjectDetection(std::vector<std::vector<Point> > contours, Mat 
 
 	std::vector<cv::Point> approx;
 	cv::Mat dst = src.clone();
+	cv::Mat hsvImg;
+
+	cvtColor(src, hsvImg, CV_BGR2HSV);
+
 	std::vector<std::vector<Point> > detectedContours;
+
+	
 
 	for (int i = 0; i < contours.size(); i++)
 	{
@@ -21,11 +27,33 @@ ObjectDetection::ObjectDetection(std::vector<std::vector<Point> > contours, Mat 
 		// Skip small or non-convex objects 
 		if (std::fabs(cv::contourArea(contours[i])) < 100 || !cv::isContourConvex(approx))
 			continue;
-
+	
 		if (approx.size() == 3)
 		{
-			setLabel(dst, "TRI", contours[i]);    // Triangles
+
+			//cv::Rect r = cv::boundingRect(contours[i]);
+
+			//cv::Point pt(r.x + ((r.width - text.width) / 2), r.y + ((r.height + text.height) / 2));
+
+
+
+			/*hsv.val[0] = 0;
+			hsv.val[1] = 0;
+			hsv.val[2] = 0;
+
+			int cSize = contours[i].size();
+			for (int j = 0; j < cSize; j++) {
+				hsv.val[0] += hsvImg.at<Vec3b>(contours[i][j]).val[0];
+				hsv.val[1] += hsvImg.at<Vec3b>(contours[i][j]).val[1];
+				hsv.val[2] += hsvImg.at<Vec3b>(contours[i][j]).val[2];
+			}
+			hsv.val[0] /= cSize;
+			hsv.val[1] /= cSize;
+			hsv.val[2] /= cSize;*/
+
+			setLabel(dst, "TRI", contours[i],  getHSV(hsvImg, contours[i]));    // Triangles
 			detectedContours.push_back(contours[i]);
+
 			//drawContours(dst, contours[i], -1, (255, 0, 0), 3);
 
 		}
@@ -49,7 +77,7 @@ ObjectDetection::ObjectDetection(std::vector<std::vector<Point> > contours, Mat 
 			// Use the degrees obtained above and the number of vertices
 			// to determine the shape of the contour
 			if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3) {
-				setLabel(dst, "RECT", contours[i]);
+				setLabel(dst, "RECT", contours[i], getHSV(hsvImg, contours[i]));
 				detectedContours.push_back(contours[i]);
 			}
 		}
@@ -62,7 +90,7 @@ ObjectDetection::ObjectDetection(std::vector<std::vector<Point> > contours, Mat 
 
 			if (std::abs(1 - ((double)r.width / r.height)) <= 0.3 &&
 				std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.3) {
-				setLabel(dst, "CIR", contours[i]);
+				setLabel(dst, "CIR", contours[i], getHSV(hsvImg, contours[i]));
 				detectedContours.push_back(contours[i]);
 			}
 		}
@@ -79,19 +107,33 @@ ObjectDetection::~ObjectDetection()
 /**
 * Helper function to display text in the center of a contour
 */
-void ObjectDetection::setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour)
+void ObjectDetection::setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour, Vec3b intensity)
 {
 	int fontface = cv::FONT_HERSHEY_SIMPLEX;
 	double scale = 0.4;
 	int thickness = 1;
 	int baseline = 0;
 
-	cv::Size text = cv::getTextSize(label, fontface, scale, thickness, &baseline);
+	std::string textDisplay = label + " h" + std::to_string(intensity.val[0]) + " s" + std::to_string(intensity.val[1]) + " v" + std::to_string(intensity.val[2]);
+
+	cv::Size text = cv::getTextSize(textDisplay, fontface, scale, thickness, &baseline);
 	cv::Rect r = cv::boundingRect(contour);
 
 	cv::Point pt(r.x + ((r.width - text.width) / 2), r.y + ((r.height + text.height) / 2));
 	cv::rectangle(im, pt + cv::Point(0, baseline), pt + cv::Point(text.width, -text.height), CV_RGB(255, 255, 255), CV_FILLED);
-	cv::putText(im, label, pt, fontface, scale, CV_RGB(0, 0, 0), thickness, 8);
+	cv::putText(im, textDisplay, pt, fontface, scale, CV_RGB(0, 0, 0), thickness, 8);
+}
+
+Vec3b ObjectDetection::getHSV(Mat hsvImg, std::vector<Point> contour) {
+	/// Get the moments
+
+	Moments moment = moments(contour, false);
+
+	///  Get the mass centers:
+
+	Point2f p = Point2f(moment.m10 / moment.m00, moment.m01 / moment.m00);
+	return hsvImg.at<Vec3b>(p);
+
 }
 
 /**
