@@ -16,7 +16,7 @@ ObjectDetection::ObjectDetection(std::vector<std::vector<Point> > contours, Mat 
 
 	std::vector<std::vector<Point> > detectedContours;
 
-	
+
 
 	for (int i = 0; i < contours.size(); i++)
 	{
@@ -27,7 +27,7 @@ ObjectDetection::ObjectDetection(std::vector<std::vector<Point> > contours, Mat 
 		// Skip small or non-convex objects 
 		if (std::fabs(cv::contourArea(contours[i])) < 100 || !cv::isContourConvex(approx))
 			continue;
-	
+
 		if (approx.size() == 3)
 		{
 
@@ -43,17 +43,16 @@ ObjectDetection::ObjectDetection(std::vector<std::vector<Point> > contours, Mat 
 
 			int cSize = contours[i].size();
 			for (int j = 0; j < cSize; j++) {
-				hsv.val[0] += hsvImg.at<Vec3b>(contours[i][j]).val[0];
-				hsv.val[1] += hsvImg.at<Vec3b>(contours[i][j]).val[1];
-				hsv.val[2] += hsvImg.at<Vec3b>(contours[i][j]).val[2];
+			hsv.val[0] += hsvImg.at<Vec3b>(contours[i][j]).val[0];
+			hsv.val[1] += hsvImg.at<Vec3b>(contours[i][j]).val[1];
+			hsv.val[2] += hsvImg.at<Vec3b>(contours[i][j]).val[2];
 			}
 			hsv.val[0] /= cSize;
 			hsv.val[1] /= cSize;
 			hsv.val[2] /= cSize;*/
 
-			setLabel(dst, "TRI", contours[i],  getHSV(hsvImg, contours[i]));    // Triangles
+			setLabel(dst, "TRI", contours[i], getHSV(hsvImg, contours[i]));    // Triangles 
 			detectedContours.push_back(contours[i]);
-
 			//drawContours(dst, contours[i], -1, (255, 0, 0), 3);
 
 		}
@@ -107,15 +106,15 @@ ObjectDetection::~ObjectDetection()
 /**
 * Helper function to display text in the center of a contour
 */
-void ObjectDetection::setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour, Vec3b intensity)
+void ObjectDetection::setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour, std::string objectShape)
 {
 	int fontface = cv::FONT_HERSHEY_SIMPLEX;
 	double scale = 0.4;
 	int thickness = 1;
 	int baseline = 0;
 
-	std::string textDisplay = label + " h" + std::to_string(intensity.val[0]) + " s" + std::to_string(intensity.val[1]) + " v" + std::to_string(intensity.val[2]);
-
+	//std::string textDisplay = label + " h" + std::to_string(intensity.val[0]) + " s" + std::to_string(intensity.val[1]) + " v" + std::to_string(intensity.val[2]);
+	std::string textDisplay = objectShape + " " + label;
 	cv::Size text = cv::getTextSize(textDisplay, fontface, scale, thickness, &baseline);
 	cv::Rect r = cv::boundingRect(contour);
 
@@ -124,7 +123,7 @@ void ObjectDetection::setLabel(cv::Mat& im, const std::string label, std::vector
 	cv::putText(im, textDisplay, pt, fontface, scale, CV_RGB(0, 0, 0), thickness, 8);
 }
 
-Vec3b ObjectDetection::getHSV(Mat hsvImg, std::vector<Point> contour) {
+std::string ObjectDetection::getHSV(Mat hsvImg, std::vector<Point> contour) {
 	/// Get the moments
 
 	Moments moment = moments(contour, false);
@@ -132,8 +131,17 @@ Vec3b ObjectDetection::getHSV(Mat hsvImg, std::vector<Point> contour) {
 	///  Get the mass centers:
 
 	Point2f p = Point2f(moment.m10 / moment.m00, moment.m01 / moment.m00);
-	return hsvImg.at<Vec3b>(p);
+	Vec3b point = hsvImg.at<Vec3b>(p);
+	int hueValue = point.val[0];
 
+	if ((hueValue > 160) || (hueValue < 20))
+		return "RED";
+	else if ((hueValue > 105) && (hueValue < 125))
+		return "BLUE";
+	else if ((hueValue > 80) && (hueValue < 100))
+		return "GREEN";
+	else
+		return "NO RGB COLOR";
 }
 
 /**

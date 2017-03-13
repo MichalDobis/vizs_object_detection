@@ -16,8 +16,8 @@ public:
 	ObjectDetection(std::vector<std::vector<Point> > contours, Mat src);
 	~ObjectDetection();
 private:
-	void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour, Vec3b intensity);
-	cv::Vec3b getHSV(Mat hsvImg, std::vector<Point> contour);
+	void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour, std::string objectShape);
+	std::string getHSV(Mat hsvImg, std::vector<Point> contour);
 	static double angle(cv::Point pt1, cv::Point pt2, cv::Point pt0);
 
 

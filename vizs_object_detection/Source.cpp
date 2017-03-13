@@ -67,7 +67,8 @@ int main(int argc, char** argv)
 	//boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
 	}*/
 
-	ImageProcessing imageProcess("C:/Users/Michal/Documents/Visual Studio 2015/Projects/vizs_object_detection/Video_27-02-2017_01-49-50");
+	//ImageProcessing imageProcess("C:/Users/Michal/Documents/Visual Studio 2015/Projects/vizs_object_detection/Video_27-02-2017_01-49-50");
+	ImageProcessing imageProcess("C:/Users/Viktor Dluhoš/Documents/Visual Studio 2015/Projects/Demo_app/Video_27-02-2017_01-49-50");
 	//ImageProcessing imageProcess(0);
 	imageProcess.doImageProcessing();
 
